@@ -12,15 +12,20 @@ const router = express.Router();
 router.get('/', logger, (req, res, next) => {
     Users.get()
         .then(users => {
-            console.log(users)
             res.json(users)
         })
         .catch(next)
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', logger,(req, res,next) => {
   // RETURN THE USER OBJECT
   // this needs a middleware to verify user id
+    const { id } = req.params
+    Users.getById(id)
+        .then(user => {
+            res.json(user)
+        })
+        .catch(next)
 });
 
 router.post('/', (req, res) => {
