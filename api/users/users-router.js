@@ -2,6 +2,7 @@ const express = require('express');
 
 // You will need `users-model.js` and `posts-model.js` both
 const Users = require('./users-model')
+const Post = require('../posts/posts-model')
 
 // The middleware functions also need to be required
 
@@ -58,7 +59,7 @@ router.put('/:id', logger,(req, res,next) => {
 
 });
 
-router.delete('/:id', (req, res,next) => {
+router.delete('/:id', logger, (req, res,next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
     const {id} = req.params
@@ -73,15 +74,29 @@ router.delete('/:id', (req, res,next) => {
 
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', logger,(req, res, next) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
+    const {id} = req.params
+    Users.getUserPosts(id)
+        .then(posts => {
+            res.json(posts)
+        })
+        .catch(next)
+
+
+
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', (req, res, next) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+    Post.insert(req.body)
+        .then(post => {
+            res.status(201).json(post)
+        })
+        .catch(next)
 });
 
 
