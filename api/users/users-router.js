@@ -56,13 +56,21 @@ router.put('/:id', logger,(req, res,next) => {
         })
         .catch(next)
 
-
-
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res,next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+    const {id} = req.params
+
+    Users.getById(id)
+        .then(user => {
+            res.json(user)
+            return Users.remove(id)
+        })
+        .catch(next)
+
+
 });
 
 router.get('/:id/posts', (req, res) => {
