@@ -17,4 +17,12 @@ server.get('/', logger, (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
+server.use((err, req, res, next) => { // eslint-disable-line
+  console.log('disaster!')
+  res.status(err.status || 500).json({
+    message: `The Horror: ${err.message}`,
+  })
+})
+
+
 module.exports = server;
